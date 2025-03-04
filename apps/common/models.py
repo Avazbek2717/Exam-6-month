@@ -110,6 +110,11 @@ class ContactUs(BaseModel):
     email = models.EmailField()
     message = models.TextField()
 
+    def __str__(self):
+        return self.full_name
 
 
+
+
+class Founder(BaseModel):
     
