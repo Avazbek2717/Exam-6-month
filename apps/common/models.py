@@ -118,3 +118,13 @@ class ContactUs(BaseModel):
 
 class Founder(BaseModel):
     
+
+
+
+
+
+
+
+
+
+# kanfilik bolma
