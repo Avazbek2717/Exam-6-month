@@ -117,6 +117,21 @@ class ContactUs(BaseModel):
 
 
 class Founder(BaseModel):
+    name  = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='founder/')
+    description = models.TextField(null=True,blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class Testimonial(BaseModel):
+    name = models.CharField(max_length=100)
+    photo = models.ImageField(upload_to='testimonials/', blank=True, null=True)
+    feedback = models.TextField()
+    
+
+    def __str__(self):
+        return self.name
     
 
 
