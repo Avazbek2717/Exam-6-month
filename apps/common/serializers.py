@@ -18,3 +18,7 @@ class SendEmailSerializer(serializers.ModelSerializer):
         model = Subscriber
         fields = ['email']
 
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    pass
