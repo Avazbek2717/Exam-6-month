@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import User
+from apps.users.models import User
 
 
 class BaseModel(models.Model):
@@ -135,6 +135,23 @@ class Testimonial(BaseModel):
     
 
 
+class Banner(BaseModel):
+    name = models.CharField(max_length=200)
+    poster = models.ImageField(upload_to='poster/')
+
+    def __str__(self):
+        return self.name
+    
+
+
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True) 
+    subscribed_at = models.DateTimeField(auto_now_add=True)  
+    is_active = models.BooleanField(default=True)  
+
+    def __str__(self):
+        return self.email
+    
 
 
 
@@ -142,4 +159,6 @@ class Testimonial(BaseModel):
 
 
 
-# kanfilik bolma
+
+
+
