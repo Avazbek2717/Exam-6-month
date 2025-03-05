@@ -198,3 +198,17 @@ SIMPLE_JWT = {
 }
 
 
+# Celery sozlamalari
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis yoki boshqa broker ishlatishingiz mumkin
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+# Email sozlamalari (SMTP yoki boshqa email xizmati kerak)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # O'zingizning SMTP serveringizni kiriting
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'toshtonovavazbek070@gmail.com'  # O'zingizning emailingiz
+EMAIL_HOST_PASSWORD = 'wkhjfquqialocgwo'  # Email parolingiz (yaxshisi, .env faylda saqlang)
+
+
