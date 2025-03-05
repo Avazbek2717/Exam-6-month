@@ -11,9 +11,10 @@ class NewsCreateSerializer(serializers.ModelSerializer):
         model = News
         fields = ['title', 'content']
 
+
 class SendEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscriber
-        fields = ('email','is_active')
-        
+        fields = ['email']
+
