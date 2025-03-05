@@ -16,4 +16,3 @@ class SendEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscriber
         fields = ('email','is_active')
-        
