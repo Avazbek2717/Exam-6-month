@@ -18,3 +18,12 @@ class SendEmailSerializer(serializers.ModelSerializer):
         model = Subscriber
         fields = ['email']
 
+
+class BannerSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Banner
+        fields = ['name', 'poster']
+
+
