@@ -22,4 +22,4 @@ class BannerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        fields =  "__all__"#("id", "name", "poster")
+        fields = ("id", "name", "poster")
