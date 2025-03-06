@@ -15,15 +15,18 @@ class Category(BaseModel):
     
     def __str__(self):
         return self.name
+  
     
 class Tag(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
-    
+
+
 class Image(models.Model):
     image = models.ImageField(upload_to="products/")
+
 
 class Range(BaseModel):
     pass
@@ -61,7 +64,6 @@ class Product(BaseModel):
         return self.price
 
 
-
 class Review(BaseModel):
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='reviews') 
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
@@ -95,6 +97,7 @@ class Order(BaseModel):
     def __str__(self):
         return f"Order {self.id} - {self.full_name}"
 
+
 class OrderItem(BaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
@@ -104,6 +107,7 @@ class OrderItem(BaseModel):
     def __str__(self):
         return f"{self.product.title} x {self.quantity}"
     
+
 class ContactUs(BaseModel):
     full_name = models.CharField(BaseModel)
     email = models.EmailField()
@@ -111,8 +115,6 @@ class ContactUs(BaseModel):
 
     def __str__(self):
         return self.full_name
-
-
 
 
 class Founder(BaseModel):
@@ -123,16 +125,15 @@ class Founder(BaseModel):
     def __str__(self):
         return self.name
     
+
 class Testimonial(BaseModel):
     name = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='testimonials/', blank=True, null=True)
     feedback = models.TextField()
-    
 
     def __str__(self):
         return self.name
     
-
 
 class Banner(BaseModel):
     name = models.CharField(max_length=200)
@@ -141,7 +142,6 @@ class Banner(BaseModel):
     def __str__(self):
         return self.name
     
-
 
 class Subscriber(models.Model):
     email = models.EmailField(unique=True) 
@@ -152,7 +152,6 @@ class Subscriber(models.Model):
         return self.email
     
 
-
 class News(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -160,5 +159,3 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
-
-

@@ -15,4 +15,11 @@ class SendEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscriber
-        fields = ('email','is_active')
+        fields = ('email', 'is_active')
+
+
+class BannerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Banner
+        fields =  "__all__"#("id", "name", "poster")

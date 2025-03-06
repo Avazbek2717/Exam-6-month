@@ -39,3 +39,8 @@ class NewsCreateView(APIView):
 class SendEmail(generics.CreateAPIView):
     queryset = Subscriber.objects.all()
     serializer_class = SendEmailSerializer
+
+
+class BannerListAPIView(generics.ListAPIView):
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
