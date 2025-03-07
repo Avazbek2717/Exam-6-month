@@ -1,5 +1,6 @@
 from django.db import models
 from apps.users.models import User
+from decimal import Decimal
 
 
 class BaseModel(models.Model):
@@ -22,12 +23,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
-class Image(models.Model):
-    image = models.ImageField(upload_to="products/")
 
-class Range(BaseModel):
-    pass
-    
 
 class Product(BaseModel):
 
@@ -44,21 +40,16 @@ class Product(BaseModel):
     discount = models.IntegerField(null=True, blank=True)
     category = models.ManyToManyField('Category')
     tag = models.ManyToManyField('Tag')
-    image = models.ForeignKey('Image', on_delete=models.CASCADE, related_name='products_image')
+    poster = models.ImageField(upload_to='poster_image/')
     full_description = models.TextField()
     stock = models.PositiveIntegerField(default=0)
     rating = models.FloatField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return self.title
 
     def get_discount_price(self):
-    
-        if self.discount:
-            return round(self.price * (1 - self.discount / 100), 2)
-        return self.price
+        return round(self.price * (Decimal('1') - Decimal(self.discount) / Decimal('100')), 2)
 
 
 

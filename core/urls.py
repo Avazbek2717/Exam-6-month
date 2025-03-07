@@ -4,13 +4,15 @@ from django.contrib import admin
 from django.urls import path
 # from apps.common.views import SponsorCreateAPIView, StudentSponsorCreateAPIView,StudentListAPIView, TotalAmountStatisticAPIView,MonthlyStatisticAPIView
 from .schema import swagger_urlpatterns
-from apps.common.views import NewsCreateView,SendEmail,BannerApiVeiw
+from apps.common.views import NewsCreateView,SendEmail,BannerApiVeiw,ProductDetailAPIView,ReviewAPIView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('send_news/',NewsCreateView.as_view()),
     path('send_email/',SendEmail.as_view()),
-    path("banners/",BannerApiVeiw.as_view())
+    path("banners/",BannerApiVeiw.as_view()),
+    path('product_detail/<int:pk>/', ProductDetailAPIView.as_view()),
+    path('product_review/',ReviewAPIView.as_view())
 ]
 
 urlpatterns += swagger_urlpatterns

@@ -13,7 +13,7 @@ from rest_framework import status
 from .models import News
 from .serializers import NewsCreateSerializer
 from core.task import send_newsletter
-from rest_framework import generics
+from rest_framework import generics,permissions
 from .models import *
 from .serializers import *
 
@@ -24,9 +24,9 @@ class NewsCreateView(APIView):
     def post(self, request):
         serializer = NewsCreateSerializer(data=request.data)
         if serializer.is_valid():
-            news = serializer.save()  # Yangilikni saqlaymiz
+            news = serializer.save() 
             
-            # Celery taskni chaqiramiz
+
             send_newsletter.delay(news.id)
 
             return Response(
@@ -44,5 +44,22 @@ class SendEmail(generics.CreateAPIView):
 class BannerApiVeiw(generics.ListAPIView):
     queryset = Banner.objects.all()
     serializer_class = BannerSerializer
+
+    
+
+class ProductDetailAPIView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+
+class ReviewAPIView(generics.CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ReviewCreateSerializer
+
+    # permission_classes = [permissions.IsAuthenticated]  # Faqat tizimga kirgan foydalanuvchilar
+
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user) 
 
     
