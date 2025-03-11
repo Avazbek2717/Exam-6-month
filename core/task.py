@@ -16,7 +16,7 @@ def send_newsletter(news_id):
 
         if recipient_list:
             # 📌 HTML shablon tayyorlash
-            html_content = render_to_string('templates/emails/newsletter.html', {'news': news})
+            html_content = render_to_string('emails/newsletter.html', {'news': news})
             text_content = strip_tags(html_content)  # Oddiy matn versiyasi
 
             email = EmailMultiAlternatives(
@@ -34,3 +34,5 @@ def send_newsletter(news_id):
 
     except News.DoesNotExist:
         return "News not found."
+
+

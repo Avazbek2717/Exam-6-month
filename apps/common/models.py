@@ -1,6 +1,7 @@
 from django.db import models
 from apps.users.models import User
 from decimal import Decimal
+from django.conf import settings
 
 
 class BaseModel(models.Model):
@@ -55,7 +56,7 @@ class Product(BaseModel):
 
 class Review(BaseModel):
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='reviews') 
-    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 
     rating = models.PositiveIntegerField(default=5) 
     comment = models.TextField()
  
@@ -73,7 +74,6 @@ class Order(BaseModel):
         ('cancelled', 'Cancelled'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     full_name = models.CharField(max_length=200)
     street_address = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
