@@ -27,7 +27,7 @@ class BannerSerializer(serializers.ModelSerializer):
         fields = ['name', 'poster']
 
 
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer1(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -77,17 +77,16 @@ from .models import Review
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['id', 'rating', 'comment', 'user']  
-        read_only_fields = ['user']  
+        fields = ['id','product', 'rating', 'comment', 'user']  
     
-    def validate_rating(self,value):
-        if 5 >= value:
-            raise serializers.ValidationError('Siz 5 dan baland baxo qoya olmaysiz!')
-        return value
+    # def validate_rating(self,value):
+    #     if 5 >= value:
+    #         raise serializers.ValidationError('Siz 5 dan baland baxo qoya olmaysiz!')
+    #     return value
 
-    def validate_comment(self,value):
-        if len(value)>=10:
-            raise serializers.ValidationError('Commentni koproq yozing!')
+    # def validate_comment(self,value):
+    #     if len(value)>=10:
+    #         raise serializers.ValidationError('Commentni koproq yozing!')
 
 class ContactUsSerializer(serializers.ModelSerializer):
 

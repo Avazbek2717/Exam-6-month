@@ -16,7 +16,7 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'stock', 'rating', 'created_at')
+    list_display = ('title', 'price', 'stock', 'created_at')
     search_fields = ('title',)
     list_filter = ('category', 'tag', 'created_at')
 

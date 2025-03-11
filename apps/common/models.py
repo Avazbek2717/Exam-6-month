@@ -12,6 +12,8 @@ class BaseModel(models.Model):
         abstract=True
 
 
+
+
 class Category(BaseModel):
     name = models.CharField(max_length=200)
     
@@ -44,7 +46,6 @@ class Product(BaseModel):
     poster = models.ImageField(upload_to='poster_image/')
     full_description = models.TextField()
     stock = models.PositiveIntegerField(default=0)
-    rating = models.FloatField(default=0)
     
     def __str__(self):
         return self.title
@@ -56,7 +57,7 @@ class Product(BaseModel):
 
 class Review(BaseModel):
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='reviews') 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
     rating = models.PositiveIntegerField(default=5) 
     comment = models.TextField()
  
@@ -128,6 +129,7 @@ class Testimonial(BaseModel):
 class Banner(BaseModel):
     name = models.CharField(max_length=200)
     poster = models.ImageField(upload_to='poster/')
+    url  = models.URLField(blank=True,null=True)
 
     def __str__(self):
         return self.name

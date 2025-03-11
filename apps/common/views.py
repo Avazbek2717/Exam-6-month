@@ -57,9 +57,9 @@ class ReviewAPIView(generics.CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ReviewSerializer
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request,*args,**kwargs)
-        return  Response({"message": "Send your review"})
+    # def create(self, request, *args, **kwargs):
+    #     response = super().create(request,*args,**kwargs)
+    #     return  Response({"message": "Send your review"})
 
 
 
