@@ -12,6 +12,7 @@ class NewsCreateSerializer(serializers.ModelSerializer):
         fields = ['title', 'content']
 
 
+
 class SendEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
