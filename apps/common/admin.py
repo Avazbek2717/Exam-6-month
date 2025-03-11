@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
-    Category, Tag, Image, Product, Review, Order, OrderItem, ContactUs,
-    Founder, Testimonial, Banner, Subscriber, News
+    Category, Tag,  Product, Review, Order, OrderItem, ContactUs,
+    Founder, Testimonial, Banner, Subscriber, News,User
 )
 
 @admin.register(Category)
@@ -12,13 +12,11 @@ class CategoryAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'image',)
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'stock', 'rating', 'created_at')
+    list_display = ('title', 'price', 'stock', 'created_at')
     search_fields = ('title',)
     list_filter = ('category', 'tag', 'created_at')
 
@@ -62,3 +60,7 @@ class SubscriberAdmin(admin.ModelAdmin):
 class NewsAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at')
     search_fields = ('title',)
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('full_name','phone_number')

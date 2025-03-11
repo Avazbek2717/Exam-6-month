@@ -1,5 +1,7 @@
 from django.db import models
 from apps.users.models import User
+from decimal import Decimal
+from django.conf import settings
 
 
 class BaseModel(models.Model):
@@ -8,6 +10,8 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract=True
+
+
 
 
 class Category(BaseModel):
@@ -22,15 +26,8 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Image(models.Model):
-    image = models.ImageField(upload_to="products/")
-
-
-class Range(BaseModel):
-    pass
     
+
 
 class Product(BaseModel):
 
@@ -47,21 +44,16 @@ class Product(BaseModel):
     discount = models.IntegerField(null=True, blank=True)
     category = models.ManyToManyField('Category')
     tag = models.ManyToManyField('Tag')
-    image = models.ForeignKey('Image', on_delete=models.CASCADE, related_name='products_image')
+    poster = models.ImageField(upload_to='poster_image/')
     full_description = models.TextField()
     stock = models.PositiveIntegerField(default=0)
-    rating = models.FloatField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return self.title
 
     def get_discount_price(self):
-    
-        if self.discount:
-            return round(self.price * (1 - self.discount / 100), 2)
-        return self.price
+        return round(self.price * (Decimal('1') - Decimal(self.discount) / Decimal('100')), 2)
+
 
 
 class Review(BaseModel):
@@ -84,7 +76,6 @@ class Order(BaseModel):
         ('cancelled', 'Cancelled'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     full_name = models.CharField(max_length=200)
     street_address = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
@@ -138,6 +129,7 @@ class Testimonial(BaseModel):
 class Banner(BaseModel):
     name = models.CharField(max_length=200)
     poster = models.ImageField(upload_to='poster/')
+    url  = models.URLField(blank=True,null=True)
 
     def __str__(self):
         return self.name
