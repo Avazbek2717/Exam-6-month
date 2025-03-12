@@ -42,6 +42,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'channels'
 ]
 
 CUSTOM_APPS = [
@@ -208,5 +209,20 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'toshtonovavazbek070@gmail.com'  # O'zingizning emailingiz
 EMAIL_HOST_PASSWORD = 'wkhjfquqialocgwo'  # Email parolingiz (yaxshisi, .env faylda saqlang)
+
+
+ASGI_APPLICATION = "core.asgi.application"
+
+# Redis orqali ishlaydigan kanal qatlamini sozlash
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 

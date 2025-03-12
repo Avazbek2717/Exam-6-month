@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Category, Tag,  Product, Review, Order, OrderItem, ContactUs,
-    Founder, Testimonial, Banner, Subscriber, News,User
+    Founder, Testimonial, Banner, Subscriber, News,User,Notification
 )
 
 @admin.register(Category)
@@ -64,3 +64,7 @@ class NewsAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('full_name','phone_number')
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('title','body')

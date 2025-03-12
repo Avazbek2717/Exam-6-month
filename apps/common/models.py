@@ -151,3 +151,33 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+class Notification(models.Model):
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+    image = models.ImageField(upload_to="Notification/", null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
+
+    def send_notification(self):
+        """Bildirishnomani WebSocket orqali yuborish"""
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "notifications_group",
+            {
+                "type": "send_notification",
+                "title": self.title,
+                "body": self.body,
+                "image_url": self.image.url if self.image else None,
+                "url": self.url
+            }
+        )
+
+    def save(self, *args, **kwargs):
+        """Saqlangandan keyin avtomatik ravishda bildirishnoma yuborish"""
+        super().save(*args, **kwargs)
+        self.send_notification()  

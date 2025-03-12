@@ -4,7 +4,12 @@ from django.contrib import admin
 from django.urls import path
 from .schema import swagger_urlpatterns
 from apps.common.views import NewsCreateView,SendEmail,BannerApiVeiw,ProductDetailAPIView,ReviewAPIView,ContactUsAPIView,NewArrivalsApiView,TestimonalAPIView,OrderListCreateAPIView
-from apps.common.views import OrderRetrieveUpdateDestroyAPIView,OrderItemListCreateAPIView,OrderItemRetrieveUpdateDestroyAPIView
+from apps.common.views import OrderRetrieveUpdateDestroyAPIView,OrderItemListCreateAPIView,OrderItemRetrieveUpdateDestroyAPIView,send_notification_view,NotificationRetrieveUpdateDestroyAPIView,NotificationListCreateAPIView
+
+from rest_framework.routers import DefaultRouter
+
+
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -20,6 +25,10 @@ urlpatterns = [
     path('orders/<int:pk>/', OrderRetrieveUpdateDestroyAPIView.as_view()),  # GET, PUT, PATCH, DELETE
     path('order-items/', OrderItemListCreateAPIView.as_view()),  # GET, POST
     path('order-items/<int:pk>/', OrderItemRetrieveUpdateDestroyAPIView.as_view()),
+    path('send-notification/', send_notification_view, name='send_notification'),
+    path('notifications/', NotificationListCreateAPIView.as_view(), name='notification-list-create'),
+    path('notifications/<int:pk>/', NotificationRetrieveUpdateDestroyAPIView.as_view(), name='notification-detail'),
+
 ]
 
 urlpatterns += swagger_urlpatterns

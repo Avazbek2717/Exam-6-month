@@ -79,14 +79,14 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ['id','product', 'rating', 'comment', 'user']  
     
-    # def validate_rating(self,value):
-    #     if 5 >= value:
-    #         raise serializers.ValidationError('Siz 5 dan baland baxo qoya olmaysiz!')
-    #     return value
+    def validate_rating(self,value):
+        if 5 >= value:
+            raise serializers.ValidationError('Siz 5 dan baland baxo qoya olmaysiz!')
+        return value
 
-    # def validate_comment(self,value):
-    #     if len(value)>=10:
-    #         raise serializers.ValidationError('Commentni koproq yozing!')
+    def validate_comment(self,value):
+        if len(value)>=10:
+            raise serializers.ValidationError('Commentni koproq yozing!')
 
 class ContactUsSerializer(serializers.ModelSerializer):
 
@@ -120,10 +120,6 @@ class TestimonalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Testimonial
         exclude = ['created_at',"updated_at"]
-
-
-
-
 
 
 
@@ -185,3 +181,11 @@ class OrderSerializer(serializers.ModelSerializer):
         """ Order ichidagi barcha OrderItem narxlarini qo‘shish """
         return sum(item.price for item in obj.items.all())
 
+
+from rest_framework import serializers
+from .models import Notification
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'

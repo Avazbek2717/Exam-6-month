@@ -132,3 +132,48 @@ class OrderItemListCreateAPIView(generics.ListCreateAPIView):
 class OrderItemRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
+
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+import json
+
+def send_notification(title, body):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "notifications",
+        {
+            "type": "send_notification",
+            "message": json.dumps({"title": title, "body": body}),
+        }
+    )
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt  # ❗❗ CSRF himoyasini o‘chiradi (faqat test uchun)
+def send_notification_view(request):
+    if request.method == "POST":
+        return JsonResponse({"message": "Notification sent successfully!"})
+    return JsonResponse({"error": "Only POST requests are allowed"}, status=400)
+
+
+from rest_framework import generics
+from .models import Notification
+from .serializers import NotificationSerializer
+
+class NotificationListCreateAPIView(generics.ListCreateAPIView):
+    """Barcha bildirishnomalarni olish va yangi bildirishnoma yaratish"""
+    queryset = Notification.objects.all().order_by('-id')
+    serializer_class = NotificationSerializer
+
+    def perform_create(self, serializer):
+        """Bildirishnomani yaratish va WebSocket orqali yuborish"""
+        notification = serializer.save()
+        notification.send_notification()  # WebSocket orqali yuborish
+
+class NotificationRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """Bitta bildirishnomani olish, yangilash yoki o‘chirish"""
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
