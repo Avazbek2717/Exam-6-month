@@ -76,9 +76,18 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ['id','product', 'rating', 'comment', 'user']  
     
-    def validate_rating(self,value):
-        if 5 <= int(value):
-            raise serializers.ValidationError('Siz 5 dan baland baxo qoya olmaysiz!')
+    def validate_rating(self, value):
+        try:
+            value = int(value) 
+        except ValueError:
+            raise serializers.ValidationError("Baho butun son bo‘lishi kerak!")
+
+        if value < 0: 
+            value = 1
+
+        if value > 5:
+            raise serializers.ValidationError("Siz 5 dan baland baxo qoya olmaysiz!")
+
         return value
 
     def validate_comment(self,value):
