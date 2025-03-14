@@ -3,12 +3,15 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.core import validators
 from django.utils.deconstruct import deconstructible
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 @deconstructible
 class PhoneValidator(validators.RegexValidator):
     regex = r"^\+998\d{9}$"
     message = "To'g'ri keladigan telefon raqam kiriting"
     flags = 0
+
 
 class CustomUserManager(BaseUserManager):
     def _create_user(self, phone_number, password, **extra_fields):
@@ -36,19 +39,20 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(phone_number, password, **extra_fields)
 
-class User(AbstractUser):
+
+class CustomUser(AbstractUser):
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 
     username = None
-    first_name = None  # first_name ni olib tashlaymiz
+    first_name = None  
 
     phone_validator = PhoneValidator()
     phone_number = models.CharField(
         max_length=13,
         verbose_name='Phone number',
-        validators=[phone_validator],  
-        unique=True     
+        validators=[phone_validator],
+        unique=True
     )
     full_name = models.CharField(max_length=255, verbose_name='Full Name', blank=True, null=True)
 
@@ -56,3 +60,11 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.id} - {self.phone_number} - {self.full_name}"
+
+    def tokens(self):
+        """Foydalanuvchi uchun JWT tokenlarni yaratadi"""
+        refresh = RefreshToken.for_user(self)
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
