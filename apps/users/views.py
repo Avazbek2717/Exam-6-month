@@ -29,7 +29,7 @@ class CodeVerificationAPIView(APIView):
     def post(self, request, *args, **kwargs):
         user = self.request.user
         code_from_user = self.request.data.get("code", None)
-        code = cache.get(user.phone, None)
+        code = cache.get(user.phone_number, None)
 
         if not code_from_user:
             raise ValidationError({"code": "Kiritish shart"})
@@ -53,9 +53,9 @@ class LoginAPIView(generics.CreateAPIView):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
 
-        phone = self.request.data.get("phone")
+        phone = self.request.data.get("phone_number")
 
-        user = CustomUser.objects.filter(phone=phone).first()
+        user = CustomUser.objects.filter(phone_number=phone).first()
 
         return Response({"tokens": user.tokens()})
     

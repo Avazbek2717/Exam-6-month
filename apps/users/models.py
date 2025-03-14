@@ -44,6 +44,7 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 
+
     username = None
     first_name = None  
 
@@ -55,6 +56,7 @@ class CustomUser(AbstractUser):
         unique=True
     )
     full_name = models.CharField(max_length=255, verbose_name='Full Name', blank=True, null=True)
+    is_verified = models.BooleanField(default=False)  # Ushbu maydonni qo'shing
 
     objects = CustomUserManager()
 
