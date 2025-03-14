@@ -16,6 +16,8 @@ from core.task import send_newsletter
 from rest_framework import generics,permissions
 from .models import *
 from .serializers import *
+from .permisson import *
+from rest_framework.permissions import IsAuthenticated
 
 class NewsCreateView(APIView):
     """ Admin yangilik qo‘shsa, avtomatik obunachilarga jo‘natiladi """
@@ -56,6 +58,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 class ReviewAPIView(generics.CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [CanWriteReview]
 
     # def create(self, request, *args, **kwargs):
     #     response = super().create(request,*args,**kwargs)
@@ -152,7 +155,7 @@ def send_notification(title, body):
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-@csrf_exempt  # ❗❗ CSRF himoyasini o‘chiradi (faqat test uchun)
+@csrf_exempt 
 def send_notification_view(request):
     if request.method == "POST":
         return JsonResponse({"message": "Notification sent successfully!"})
@@ -177,3 +180,15 @@ class NotificationRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPI
     """Bitta bildirishnomani olish, yangilash yoki o‘chirish"""
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
+
+class TopsSellerApiView(APIView):
+
+    def get(self,request):
+        limit = int(request.query_params.get('limit',4))
+
+        top_seller = Product.objects.annotate(total_sold = Sum("orderitem__quantity")).order_by("-total_sold")[:limit]
+
+        serializer = ProductSerializer(top_seller,many = True)
+
+        return Response(serializer.data,status=200)
+
