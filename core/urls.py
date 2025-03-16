@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from .schema import swagger_urlpatterns
 from apps.common.views import NewsCreateView,SendEmail,BannerApiVeiw,ProductDetailAPIView,ReviewAPIView,ContactUsAPIView,NewArrivalsApiView,TestimonalAPIView,OrderListCreateAPIView
-from apps.common.views import OrderRetrieveUpdateDestroyAPIView,OrderItemListCreateAPIView,OrderItemRetrieveUpdateDestroyAPIView,send_notification_view,NotificationRetrieveUpdateDestroyAPIView,NotificationListCreateAPIView
+from apps.common.views import OrderRetrieveUpdateDestroyAPIView,OrderItemListCreateAPIView,OrderItemRetrieveUpdateDestroyAPIView,send_notification_view,NotificationRetrieveUpdateDestroyAPIView,NotificationListCreateAPIView,TopsSellerApiView
 
 from apps.users.views import UserRegisterAPIView, CodeVerificationAPIView
 
@@ -26,6 +26,8 @@ urlpatterns = [
     path('send-notification/', send_notification_view, name='send_notification'),
     path('notifications/', NotificationListCreateAPIView.as_view(), name='notification-list-create'),
     path('notifications/<int:pk>/', NotificationRetrieveUpdateDestroyAPIView.as_view(), name='notification-detail'),
+    path('users/',include("apps.users.urls")),
+    path("topseller/",TopsSellerApiView.as_view())
 
     path('register/', UserRegisterAPIView.as_view()),
     path('code-verified/', CodeVerificationAPIView.as_view()),

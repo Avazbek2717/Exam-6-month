@@ -9,6 +9,7 @@ from core.task import send_newsletter
 from rest_framework import generics
 from .models import *
 from .serializers import *
+<<<<<<< HEAD
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import json
@@ -17,6 +18,10 @@ from django.http import JsonResponse
 from .models import Notification
 from .serializers import NotificationSerializer
 
+=======
+from .permisson import *
+from rest_framework.permissions import IsAuthenticated
+>>>>>>> cbf5bc9c972a4fa54b8c86e7d872a84e9ea20606
 
 class NewsCreateView(APIView):
     """ Admin yangilik qo‘shsa, avtomatik obunachilarga jo‘natiladi """
@@ -53,6 +58,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 class ReviewAPIView(generics.CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [CanWriteReview]
 
     # def create(self, request, *args, **kwargs):
     #     response = super().create(request,*args,**kwargs)
@@ -139,7 +145,14 @@ def send_notification(title, body):
     )
 
 
+<<<<<<< HEAD
 @csrf_exempt  # ❗❗ CSRF himoyasini o‘chiradi (faqat test uchun)
+=======
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt 
+>>>>>>> cbf5bc9c972a4fa54b8c86e7d872a84e9ea20606
 def send_notification_view(request):
     if request.method == "POST":
         return JsonResponse({"message": "Notification sent successfully!"})
@@ -160,4 +173,20 @@ class NotificationListCreateAPIView(generics.ListCreateAPIView):
 class NotificationRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     """Bitta bildirishnomani olish, yangilash yoki o‘chirish"""
     queryset = Notification.objects.all()
+<<<<<<< HEAD
     serializer_class = NotificationSerializer
+=======
+    serializer_class = NotificationSerializer
+
+class TopsSellerApiView(APIView):
+
+    def get(self,request):
+        limit = int(request.query_params.get('limit',4))
+
+        top_seller = Product.objects.annotate(total_sold = Sum("orderitem__quantity")).order_by("-total_sold")[:limit]
+
+        serializer = ProductSerializer(top_seller,many = True)
+
+        return Response(serializer.data,status=200)
+
+>>>>>>> cbf5bc9c972a4fa54b8c86e7d872a84e9ea20606

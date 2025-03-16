@@ -1,7 +1,11 @@
 from django.contrib import admin
 from .models import (
     Category, Tag,  Product, Review, Order, OrderItem, ContactUs,
+<<<<<<< HEAD
     Founder, Testimonial, Banner, Subscriber, News, CustomUser, Notification
+=======
+    Founder, Testimonial, Banner, Subscriber, News,CustomUser,Notification
+>>>>>>> cbf5bc9c972a4fa54b8c86e7d872a84e9ea20606
 )
 
 
@@ -71,7 +75,10 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at')
     search_fields = ('title',)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cbf5bc9c972a4fa54b8c86e7d872a84e9ea20606
 @admin.register(CustomUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'phone')

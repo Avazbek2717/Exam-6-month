@@ -42,7 +42,8 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'channels'
+    'channels',
+    
 ]
 
 CUSTOM_APPS = [
