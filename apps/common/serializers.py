@@ -1,12 +1,10 @@
 from rest_framework import serializers
 from .models import *
+from .models import Notification
 
-
-
-from rest_framework import serializers
-from .models import News
 
 class NewsCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = News
         fields = ['title', 'content']
@@ -21,14 +19,9 @@ class SendEmailSerializer(serializers.ModelSerializer):
 
 class BannerSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = Banner
         fields = ['name', 'poster']
-
-
-
-
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -67,11 +60,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return round(total_rating / reviews.count(), 1) 
 
 
-
-from rest_framework import serializers
-from .models import Review
-
 class ReviewSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Review
         fields = ['id','product', 'rating', 'comment', 'user']  
@@ -115,7 +105,6 @@ class ContactUsSerializer(serializers.ModelSerializer):
     
 class NewArrivalsSerializer(serializers.ModelSerializer):
     
-
     class Meta:
         model = Product
         fields = ('id','title','poster','price')
@@ -123,16 +112,13 @@ class NewArrivalsSerializer(serializers.ModelSerializer):
 
 class TestimonalSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = Testimonial
         exclude = ['created_at',"updated_at"]
 
 
 
-
 class OrderItemSerializer(serializers.ModelSerializer):
-
     price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)  # Faqat o‘qish uchun
 
     class Meta:
@@ -163,11 +149,10 @@ class OrderItemSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
         
 
-
 class OrderSerializer(serializers.ModelSerializer):
-
     items = OrderItemSerializer(many=True, read_only=True)
     total_price = serializers.SerializerMethodField()
+
     class Meta:
         model = Order
         fields = "__all__"
@@ -189,10 +174,8 @@ class OrderSerializer(serializers.ModelSerializer):
         return sum(item.price for item in obj.items.all())
 
 
-from rest_framework import serializers
-from .models import Notification
-
 class NotificationSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Notification
         fields = '__all__'

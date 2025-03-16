@@ -6,3 +6,7 @@ django-jazzmin
 drf-yasg
 djangorestframework
 django-filter
+channels
+djangorestframework-simplejwt
+celery
+pillow

@@ -6,9 +6,7 @@ from .schema import swagger_urlpatterns
 from apps.common.views import NewsCreateView,SendEmail,BannerApiVeiw,ProductDetailAPIView,ReviewAPIView,ContactUsAPIView,NewArrivalsApiView,TestimonalAPIView,OrderListCreateAPIView
 from apps.common.views import OrderRetrieveUpdateDestroyAPIView,OrderItemListCreateAPIView,OrderItemRetrieveUpdateDestroyAPIView,send_notification_view,NotificationRetrieveUpdateDestroyAPIView,NotificationListCreateAPIView
 
-from rest_framework.routers import DefaultRouter
-
-
+from apps.users.views import UserRegisterAPIView, CodeVerificationAPIView
 
 
 urlpatterns = [
@@ -28,6 +26,9 @@ urlpatterns = [
     path('send-notification/', send_notification_view, name='send_notification'),
     path('notifications/', NotificationListCreateAPIView.as_view(), name='notification-list-create'),
     path('notifications/<int:pk>/', NotificationRetrieveUpdateDestroyAPIView.as_view(), name='notification-detail'),
+
+    path('register/', UserRegisterAPIView.as_view()),
+    path('code-verified/', CodeVerificationAPIView.as_view()),
 
 ]
 
