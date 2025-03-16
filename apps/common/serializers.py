@@ -26,11 +26,6 @@ class BannerSerializer(serializers.ModelSerializer):
         model = Banner
         fields = ['name', 'poster']
 
-
-
-
-
-
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     tag = serializers.SerializerMethodField()
@@ -133,7 +128,7 @@ class TestimonalSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
 
-    price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)  # Faqat o‘qish uchun
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)  
 
     class Meta:
         model = OrderItem
@@ -153,13 +148,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
         if product and quantity:
             if product.stock < quantity:
                 raise serializers.ValidationError(f"{product.title} mahsuloti uchun yetarli ombor zaxirasi mavjud emas.")
-            # Mahsulot narxini avtomatik tarzda olish
             data['price'] = product.price
         
         return data
     def create(self, validated_data):
         product = validated_data.get('product')
-        validated_data['price'] = product.price  # Narxni avtomatik olish
+        validated_data['price'] = product.price 
         return super().create(validated_data)
         
 

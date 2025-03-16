@@ -58,7 +58,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 class ReviewAPIView(generics.CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [CanWriteReview]
+    # permission_classes = [CanWriteReview]
 
     # def create(self, request, *args, **kwargs):
     #     response = super().create(request,*args,**kwargs)
