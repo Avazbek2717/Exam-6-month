@@ -33,7 +33,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('order', 'product', 'quantity', 'price')
+    list_display = ('order', 'product', 'quantity')
 
 @admin.register(ContactUs)
 class ContactUsAdmin(admin.ModelAdmin):

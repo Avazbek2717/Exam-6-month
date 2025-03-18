@@ -1,6 +1,3 @@
-
-from rest_framework.generics import CreateAPIView, ListAPIView
-from . import models
 from rest_framework.views import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
@@ -18,8 +15,18 @@ from .models import *
 from .serializers import *
 from .permisson import *
 from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+import json
+from rest_framework import generics
+from .models import Notification
+from .serializers import NotificationSerializer
+
 
 class NewsCreateView(APIView):
+    permission_classes = [IsAdminUser]
     """ Admin yangilik qo‘shsa, avtomatik obunachilarga jo‘natiladi """
 
 
@@ -88,9 +95,6 @@ class TestimonalAPIView(generics.ListAPIView):
 
 
 
-
-
-
 class OrderListCreateAPIView(generics.ListCreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -137,39 +141,83 @@ class OrderItemRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
     serializer_class = OrderItemSerializer
 
 
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-import json
+class OrderRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    lookup_field = 'pk'
 
-def send_notification(title, body):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        "notifications",
-        {
-            "type": "send_notification",
-            "message": json.dumps({"title": title, "body": body}),
-        }
-    )
+    def perform_update(self, serializer):
+        """ Buyurtmani yangilashda mahsulotlar va miqdorlar to‘g‘ri ekanligini tekshirish """
+        order = self.get_object()
+        new_items = self.request.data.get('items', [])
+        total_price = 0
+        validated_items = []
+
+        for item in new_items:
+            product = Product.objects.get(id=item['product'])
+            quantity = item['quantity']
+
+            if product.stock < quantity:
+                raise serializers.ValidationError(f"{product.title} uchun yetarli zaxira mavjud emas.")
+
+            total_price += product.price * quantity
+            validated_items.append(item)
+
+        serializer.context['order_items'] = validated_items
+        serializer.save(total_price=total_price)
 
 
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+class OrderItemRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    lookup_field = 'pk'
 
-@csrf_exempt 
-def send_notification_view(request):
-    if request.method == "POST":
-        return JsonResponse({"message": "Notification sent successfully!"})
-    return JsonResponse({"error": "Only POST requests are allowed"}, status=400)
+    def perform_update(self, serializer):
+        """ OrderItem yangilanishida mahsulot va miqdor mosligini tekshirish """
+        order_item = self.get_object()
+        product = serializer.validated_data.get('product', order_item.product)
+        quantity = serializer.validated_data.get('quantity', order_item.quantity)
+
+        if product.stock + order_item.quantity < quantity:
+            raise serializers.ValidationError(f"{product.title} mahsuloti uchun yetarli ombor zaxirasi yo‘q.")
+        
+        # Oldingi zaxirani tiklash va yangi miqdorni kamaytirish
+        product.stock += order_item.quantity
+        product.stock -= quantity
+        product.save()
+        serializer.save()
 
 
-from rest_framework import generics
+
+
+from rest_framework import generics, permissions
 from .models import Notification
 from .serializers import NotificationSerializer
+
+class IsAdminUser(permissions.BasePermission):
+    """
+    Faqat admin foydalanuvchilar ruxsat olishi mumkin
+    """
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_staff)
+
+class NotificationCreateAPIView(generics.CreateAPIView):
+    """Foydalanuvchi faqat yangi bildirishnoma yaratishi mumkin"""
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAdminUser]  # Faqat adminlarga ruxsat
+
+    def perform_create(self, serializer):
+        """Bildirishnoma yaratilgandan keyin WebSocket orqali yuborish"""
+        notification = serializer.save()
+        notification.send_notification()
+
 
 class NotificationListCreateAPIView(generics.ListCreateAPIView):
     """Barcha bildirishnomalarni olish va yangi bildirishnoma yaratish"""
     queryset = Notification.objects.all().order_by('-id')
     serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]  # Faqat adminlar
 
     def perform_create(self, serializer):
         """Bildirishnomani yaratish va WebSocket orqali yuborish"""
@@ -180,6 +228,8 @@ class NotificationRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPI
     """Bitta bildirishnomani olish, yangilash yoki o‘chirish"""
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]  # Faqat adminlar
+
 
 class TopsSellerApiView(APIView):
 
@@ -191,4 +241,12 @@ class TopsSellerApiView(APIView):
         serializer = ProductSerializer(top_seller,many = True)
 
         return Response(serializer.data,status=200)
+    
 
+class ReviewListApiView(generics.ListAPIView):
+    serializer_class = ReviewsListSerializer
+    permission_classes = [IsAuthenticated]  # Faqat login qilganlar ko‘ra oladi
+
+    def get_queryset(self):
+        """ Foydalanuvchiga yozilgan sharhlarni qaytarish """
+        return Review.objects.filter(user=self.request.user)

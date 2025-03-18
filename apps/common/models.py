@@ -100,7 +100,7 @@ class OrderItem(BaseModel):
     
 
 class ContactUs(BaseModel):
-    full_name = models.CharField(BaseModel)
+    full_name = models.CharField(max_length=200)
     email = models.EmailField()
     message = models.TextField()
 

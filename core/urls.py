@@ -3,8 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path,include
 from .schema import swagger_urlpatterns
-from apps.common.views import NewsCreateView,SendEmail,BannerApiVeiw,ProductDetailAPIView,ReviewAPIView,ContactUsAPIView,NewArrivalsApiView,TestimonalAPIView,OrderListCreateAPIView
-from apps.common.views import OrderRetrieveUpdateDestroyAPIView,OrderItemListCreateAPIView,OrderItemRetrieveUpdateDestroyAPIView,send_notification_view,NotificationRetrieveUpdateDestroyAPIView,NotificationListCreateAPIView,TopsSellerApiView
+from apps.common.views import *
 
 from rest_framework.routers import DefaultRouter
 
@@ -23,13 +22,15 @@ urlpatterns = [
     path('testimonal/',TestimonalAPIView.as_view()),
     path('orders/', OrderListCreateAPIView.as_view()),   # GET, POST
     path('orders/<int:pk>/', OrderRetrieveUpdateDestroyAPIView.as_view()),  # GET, PUT, PATCH, DELETE
-    path('order-items/', OrderItemListCreateAPIView.as_view()),  # GET, POST
-    path('order-items/<int:pk>/', OrderItemRetrieveUpdateDestroyAPIView.as_view()),
-    path('send-notification/', send_notification_view, name='send_notification'),
+    path('send-notification/', NotificationCreateAPIView.as_view(), name='send_notification'),
     path('notifications/', NotificationListCreateAPIView.as_view(), name='notification-list-create'),
     path('notifications/<int:pk>/', NotificationRetrieveUpdateDestroyAPIView.as_view(), name='notification-detail'),
     path('users/',include("apps.users.urls")),
-    path("topseller/",TopsSellerApiView.as_view())
+    path("topseller/",TopsSellerApiView.as_view()),
+    path('update_order/<int:pk>/',OrderRetrieveUpdateDestroyAPIView.as_view()),
+    path('update_orderitem/<int:pk>/',OrderItemRetrieveUpdateDestroyAPIView.as_view()),
+    path('reviewlist/',ReviewListApiView.as_view())
+
 
 ]
 

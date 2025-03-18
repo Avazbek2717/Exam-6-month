@@ -65,7 +65,7 @@ class LoginAPIView(generics.CreateAPIView):
 class ResendVerificationCodeView(APIView):
 
     def post(self,request):
-        serializer = serializers.ResendVerificarionCodeSerilizer(data=request.data)
+        serializer = serializers.ResendVerificationCodeSerializer(data=request.data)
 
         if serializer.is_valid():
             return Response(serializer.save(),status=200)

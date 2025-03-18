@@ -24,7 +24,7 @@ class BannerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        fields = ['name', 'poster']
+        fields = ['name', 'poster','url']
 
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
@@ -129,7 +129,7 @@ class TestimonalSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):
 
     price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)  
-
+    
     class Meta:
         model = OrderItem
         fields = '__all__'
@@ -190,3 +190,11 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
+
+
+class ReviewsListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields = ['id','product', 'rating', 'comment', 'user']  
+        
